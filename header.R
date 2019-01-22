@@ -33,11 +33,15 @@ tileOutDir <- file.path(dataOutDir,'tile')
 figsOutDir <- file.path(OutDir,'figures')
 DataDir <- 'data'
 UnRepDataDir<-file.path('../GB_Unreported/out/data')
+StrataDir <- file.path('../GB_Data/out/Strata')
+spatialOutDir <- file.path(OutDir,'spatial')
+
 dir.create(file.path(OutDir), showWarnings = FALSE)
 dir.create(file.path(dataOutDir), showWarnings = FALSE)
 dir.create(file.path(StrataOutDir), showWarnings = FALSE)
 dir.create(file.path(tileOutDir), showWarnings = FALSE)
 dir.create(file.path(figsOutDir), showWarnings = FALSE)
+dir.create(file.path(spatialOutDir), showWarnings = FALSE)
 dir.create(DataDir, showWarnings = FALSE)
 dir.create("tmp", showWarnings = FALSE)
 

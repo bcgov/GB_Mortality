@@ -42,3 +42,7 @@ for (i in 1:num) {
 
 #select the full GBPU for now - 'GBPUr'
 UnReport<-UnrepLR[[1]]
+
+#Read in spatial files for output
+GBPUr<-raster(file.path(StrataDir,"GBPUr.tif"))
+

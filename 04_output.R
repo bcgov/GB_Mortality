@@ -12,5 +12,10 @@
 
 source("header.R")
 
+# Spreadsheet of Mortality data by GBPU
 WriteXLS(Mort_UnRep, file.path(dataOutDir,paste('Mort_UnRep.xls',sep='')))
+
+# Mortality raster for IUCN assessment
+MortR<-subs(GBPUr,Mort_UnRep, by='GBPU',which='pc_Mort')
+writeRaster(MortR, filename=file.path(spatialOutDir,"MortR.tif"), format="GTiff", overwrite=TRUE)
 
