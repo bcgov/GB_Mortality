@@ -12,6 +12,6 @@
 
 source("header.R")
 
-Mort_UnRep$Reported_Unknown <- (Mort_UnRep$ReportedFemaleMort+Mort_UnRep$ReportedFemaleMort*Mort_UnRep$UnReport)
-
-Mort_UnRep$pc_Mort <- round(Mort_UnRep$Reported_Unknown/Mort_UnRep$PopEst*100,2)
+Mort_UnRep$UnReportedFemaleMort <- (Mort_UnRep$ReportedFemaleMort*Mort_UnRep$UnReport)
+Mort_UnRep$TotalFemaleMort <- (Mort_UnRep$ReportedFemaleMort+Mort_UnRep$UnReportedFemaleMort)
+Mort_UnRep$pc_Mort <- round(Mort_UnRep$TotalFemaleMort/Mort_UnRep$PopEst*100,2)

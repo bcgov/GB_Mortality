@@ -22,4 +22,4 @@ Mort$GBPU[Mort$GBPU == 'North Purcell'] <- 'North Purcells'
 # combine the unreported mortality and the population data
 Mort_UnRep<-
   join(Mort, UnReport, by = 'GBPU') %>%
-  dplyr::select(GBPU,PopEst,ReportedFemaleMort,UnReport)
+  dplyr::select(GBPU,GBPUid,PopEst,ReportedFemaleMort,UnReport)
