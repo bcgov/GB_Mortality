@@ -14,12 +14,76 @@ source("header.R")
 
 # Fix the Mortality data
 # North Purcells = North Purcell + Spillamacheen, combine values, delete Spillamacheen record, and change GBPU name
-Mort[Mort$GBPU=='North Purcell',]$PopEst<-sum(Mort[which(Mort$GBPU %in% c('Spillamacheen','North Purcell')),]$PopEst)
-Mort[Mort$GBPU=='North Purcell',]$ReportedFemaleMort<-sum(Mort[which(Mort$GBPU %in% c('Spillamacheen','North Purcell')),]$ReportedFemaleMort)
-Mort <- Mort[!Mort$GBPU == 'Spillamacheen',]
-Mort$GBPU[Mort$GBPU == 'North Purcell'] <- 'North Purcells'
+#Mort[Mort$GBPU=='North Purcell',]$ReportedFemaleMort<-sum(Mort[which(Mort$GBPU %in% c('Spillamacheen','North Purcell')),]$ReportedFemaleMort)
+#Mort <- Mort[!Mort$GBPU == 'Spillamacheen',]
+#Mort$GBPU[Mort$GBPU == 'North Purcell'] <- 'North Purcells'
 
 # combine the unreported mortality and the population data
-Mort_UnRep<-
-  join(Mort, UnReport, by = 'GBPU') %>%
-  dplyr::select(GBPU,GBPUid,PopEst,ReportedFemaleMort,UnReport)
+#Mort_UnRep<-
+#  join(Mort, UnReport, by = 'GBPU') %>%
+#  dplyr::select(GBPU,GBPUid,PopEst,ReportedFemaleMort,UnReportDensity,UnReportNoDensity)
+
+#set female hunt mortality to 0 till get data???
+#Mort_UnRep$FemaleHuntMort<-0
+
+#set all NAs to 0
+#Mort_UnRep[is.na(Mort_UnRep)] <- 0
+
+# Assign GBPU to each location
+# select only last 10 years of records - all have georeferencing
+CIpoint1 <- GB_CI %>%
+  filter(KillYear <2018 & KillYear>2007 & SEX != 'M') %>%
+  mutate(HuntMort=as.numeric(KILL_CODE == 1)) %>%
+  mutate(NonHuntMort=as.numeric(KILL_CODE != 1))
+  #filter(KILL_CODE != 1 & KillYear <2018 & KillYear>2007 & SEX != 'M')
+
+#Covers 4 UTM zones - make an sf for each zone then project to Albers and combine them
+utmOut<-list()
+utms<-c(8,9,10,11)
+for (j in 1:length(utms)) {
+   i<-utms[j]
+   utmOut[[j]] <-CIpoint1 %>%
+    filter(ZONE_NO==i) %>%
+    st_as_sf(coords = c("Easting", "Northing")
+    ,crs=paste("+proj=utm +zone=",i,sep='')) %>%
+    st_transform(crs="+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+  }
+
+#combine the list of sf objects into a single geometry and export for inspection
+CIpoint<-do.call(rbind, utmOut)
+st_write(CIpoint, file.path(spatialOutDir,'CIpoint.shp'), delete_layer = TRUE)
+
+#Combine point over poly to get GBPU names and id for each kill
+GBPU<-st_transform(GBPU,crs="+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+
+CIpointwGBPU<-CIpoint %>%
+  st_join(GBPU, join = st_intersects) %>%
+  merge(GBPU_lut,by='GBPU') %>%
+  mutate(WMU=as.numeric(MU_CODE)) %>%
+  dplyr::select(GBPU,GBPU_Name,WMU,KillYear,KILL_CODE,HuntMort,NonHuntMort)
+
+# instead of overlay could use WMU and assign to GBPU
+# Summarise non-hunt kill data for female + unknown, 10 years from 2008 to 2017
+FemaleUnk_Report<-CIpointwGBPU %>%
+  group_by(GBPU, GBPU_Name) %>%
+  dplyr::summarise(THuntMort=sum(HuntMort),TNonHuntMort=sum(NonHuntMort)) %>%
+  mutate(FemaleUnk_HuntMort_10yrAvg = THuntMort/10) %>%
+  mutate(FemaleUnk_NHuntMort_10yrAvg = TNonHuntMort/10) %>%
+  dplyr::select(GBPU_Name, GBPU, THuntMort, FemaleUnk_HuntMort_10yrAvg, TNonHuntMort,FemaleUnk_NHuntMort_10yrAvg)
+
+# Remove geometry so a simple data.frame
+st_geometry(FemaleUnk_Report) <- NULL
+
+#Join GBPU, population estimate - from file, reported female+unknown mortality
+FemaleUnk_Report_pop<-FemaleUnk_Report %>%
+  merge(gb2018popIN, by.x='GBPU_Name', by.y='GBPU', all.y=TRUE) %>%
+  merge(UnReport,by.x='GBPU_Name',by.y='GBPU') %>%
+  dplyr::select(GBPU_Name, pop2018, FemaleUnk_HuntMort_10yrAvg, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio)
+
+FemaleUnk_Report_pop[is.na(FemaleUnk_Report_pop)] <- 0
+
+
+
+
+
+

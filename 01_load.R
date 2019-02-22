@@ -25,9 +25,9 @@ colnames(GBPU_lut)<-c('GBPUid','GBPU')
 #Read in current female mortality data based compiled by Steve McIver and Provincial Grizzly Bear Technical Team
 #Includes 2018 updated population information
 # Select the population size and Average Annual Female mortality Reported 10 year average
-Mort <- data.frame(read_xlsx(file.path(DataDir, "Female Mort_GBPU_V3.xlsx"), sheet=NULL)) %>%
-           dplyr::select(GBPU=GBPU, PopEst=Pop.Est, ReportedFemaleMort=Average.Annual.Reported..11) %>%
-           join(GBPU_lut, by='GBPU')
+#Mort <- data.frame(read_xlsx(file.path(DataDir, "Female Mort_GBPU_V3.xlsx"), sheet=NULL)) %>%
+#           dplyr::select(GBPU=GBPU, PopEst=Pop.Est, ReportedFemaleMort=Average.Annual.Reported..11) %>%
+#           join(GBPU_lut, by='GBPU')
 
 StrataL <- c('GBPUr','GBPUr_NonHab','GBPUr_BEI_1_2','GBPUr_BEI_1_5')
 num<-length(StrataL)
@@ -41,8 +41,9 @@ for (i in 1:num) {
   # Central-South Purcells = South Purcells + Central Purcells
   # Drop those records since new has recalculated values based on 55
   UnrepLR[[i]] <-
-    data.frame(read_xls(file.path(UnRepDataDir,paste('UnReported.xls',sep='')), sheet=StratName)) %>%
-      dplyr::select(GBPU,UnReport)
+    data.frame(read_xls(file.path(UnRepDataDir,paste('UnReportedV2.xls',sep='')), sheet=StratName)) %>%
+    mutate(UnReportRatio=UnReportDensity) %>%
+      dplyr::select(GBPU,UnReportRatio)
   }
 
 #select the full GBPU for now - 'GBPUr'
@@ -50,4 +51,17 @@ UnReport<-UnrepLR[[1]]
 
 #Read in spatial files for output
 GBPUr<-raster(file.path(StrataDir,"GBPUr.tif"))
+GBPU<-st_read(file.path(GBspatialDir,'GBPU.shp'))
+GBPU_lut<-readRDS(file = file.path(StrataDir,'GBPU_lut'))
+colnames(GBPU_lut)<-c('GBPU','GBPU_Name')
 
+WMUr<-raster(file.path(StrataDir,"WMUr.tif"))
+WMU<-st_read(file.path(GBspatialDir,'WMU.shp'))
+
+#Load CI data
+#GB_CI <- data.frame(read_xlsx(file.path(DataDir, "CI/GB_CI_to_2018.xlsx"), sheet=NULL))
+GB_CI <- data.frame(read_xlsx(file.path(DataDir, "CI/CI-1978-2017_Don.xlsx"), sheet=NULL))
+
+#Load grizzly bear population data
+gb2018popIN <- data.frame(read_xlsx(file.path(GBDataDir, "population/GB2018pop.xlsx"), sheet=NULL))
+gb2018pop<-merge(GBPU_lut,gb2018popIN, by.x='GBPU_Name', by.y='GBPU')

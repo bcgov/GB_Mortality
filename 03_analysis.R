@@ -11,7 +11,16 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 source("header.R")
+#Calculate non hunted mortality - known + unreported
+FemaleUnk_Report_pop$UnReportedFemaleMort <- round((FemaleUnk_Report_pop$FemaleUnk_NHuntMort_10yrAvg*FemaleUnk_Report_pop$UnReportRatio),2)
+FemaleUnk_Report_pop$TotalFemale_NHuntMort<-round((FemaleUnk_Report_pop$UnReportedFemaleMort + FemaleUnk_Report_pop$FemaleUnk_NHuntMort_10yrAvg),2)
+#List hunted mortality
+FemaleUnk_Report_pop$TotalFemale_HuntMort<-FemaleUnk_Report_pop$FemaleUnk_HuntMort_10yrAvg
+#Total mortality
+FemaleUnk_Report_pop$TotalFemale_Mort<-round((FemaleUnk_Report_pop$TotalFemale_HuntMort+FemaleUnk_Report_pop$TotalFemale_NHuntMort),2)
 
-Mort_UnRep$UnReportedFemaleMort <- (Mort_UnRep$ReportedFemaleMort*Mort_UnRep$UnReport)
-Mort_UnRep$TotalFemaleMort <- (Mort_UnRep$ReportedFemaleMort+Mort_UnRep$UnReportedFemaleMort)
-Mort_UnRep$pc_Mort <- round(Mort_UnRep$TotalFemaleMort/Mort_UnRep$PopEst*100,2)
+FemaleUnk_Report_pop$pc_Mort <- round(FemaleUnk_Report_pop$TotalFemale_Mort/FemaleUnk_Report_pop$pop2018*100,2)
+FemaleUnk_Report_pop$pc_Mort[is.na(FemaleUnk_Report_pop$pc_Mort)]<-0
+
+#db <- gsub(",","",db) and then run as.numeric(db)
+

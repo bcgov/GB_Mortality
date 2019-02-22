@@ -35,6 +35,8 @@ DataDir <- 'data'
 UnRepDataDir<-file.path('../GB_Unreported/out/data')
 StrataDir <- file.path('../GB_Data/out/Strata')
 spatialOutDir <- file.path(OutDir,'spatial')
+GBspatialDir <- file.path('../GB_Data/out/spatial')
+GBDataDir <- file.path('../GB_Data/data')
 
 dir.create(file.path(OutDir), showWarnings = FALSE)
 dir.create(file.path(dataOutDir), showWarnings = FALSE)

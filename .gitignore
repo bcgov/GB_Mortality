@@ -48,4 +48,6 @@ rsconnect/
   *qgs*
   *doc*
 
+/archive/
+04_output_to_FTP.R
 
