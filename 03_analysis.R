@@ -19,7 +19,7 @@ FemaleUnk_Report_pop$TotalFemale_HuntMort<-FemaleUnk_Report_pop$FemaleUnk_HuntMo
 #Total mortality
 FemaleUnk_Report_pop$TotalFemale_Mort<-round((FemaleUnk_Report_pop$TotalFemale_HuntMort+FemaleUnk_Report_pop$TotalFemale_NHuntMort),2)
 
-FemaleUnk_Report_pop$pc_Mort <- round(FemaleUnk_Report_pop$TotalFemale_Mort/FemaleUnk_Report_pop$pop2018*100,2)
+FemaleUnk_Report_pop$pc_Mort <- round(FemaleUnk_Report_pop$TotalFemale_Mort/FemaleUnk_Report_pop$EST_POP_2018*100,2)
 FemaleUnk_Report_pop$pc_Mort[is.na(FemaleUnk_Report_pop$pc_Mort)]<-0
 
 #db <- gsub(",","",db) and then run as.numeric(db)

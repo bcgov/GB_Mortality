@@ -76,9 +76,9 @@ st_geometry(FemaleUnk_Report) <- NULL
 
 #Join GBPU, population estimate - from file, reported female+unknown mortality
 FemaleUnk_Report_pop<-FemaleUnk_Report %>%
-  merge(gb2018popIN, by.x='GBPU_Name', by.y='GBPU', all.y=TRUE) %>%
+  merge(gb2018GBPUpop, by.x='GBPU_Name', by.y='POPULATION_NAME', all.y=TRUE) %>%
   merge(UnReport,by.x='GBPU_Name',by.y='GBPU') %>%
-  dplyr::select(GBPU_Name, pop2018, FemaleUnk_HuntMort_10yrAvg, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio)
+  dplyr::select(GBPU_Name, EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio)
 
 FemaleUnk_Report_pop[is.na(FemaleUnk_Report_pop)] <- 0
 
