@@ -13,7 +13,7 @@
 source("header.R")
 
 # Spreadsheet of Mortality data by GBPU
-WriteXLS(FemaleUnk_Report_pop, file.path(dataOutDir,paste('FemaleUnk_Report_pop.xls',sep='')))
+WriteXLS(FemaleUnk_Report_pop, file.path(dataOutDir,paste('FemaleUnk_Report_pop_MU.xls',sep='')))
 
 # Mortality raster for IUCN assessment
 #MortR<-subs(GBPUr,Mort_UnRep, by='GBPUid',which='pc_Mort')

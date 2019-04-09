@@ -53,37 +53,35 @@ for (j in 1:length(utms)) {
 CIpoint<-do.call(rbind, utmOut)
 st_write(CIpoint, file.path(spatialOutDir,'CIpoint.shp'), delete_layer = TRUE)
 
-#Combine point over poly to get GBPU names and id for each kill
-GBPU<-st_transform(GBPU,crs="+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+#Combine point over poly to get WMU_LEH names and id for each kill
+GB_WMU<-st_transform(GB_WMU,crs="+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
 
-CIpointwGBPU<-CIpoint %>%
-  st_join(GBPU, join = st_intersects) %>%
-  merge(GBPU_lut,by='GBPU') %>%
-  mutate(WMU=as.numeric(MU_CODE)) %>%
-  dplyr::select(GBPU,GBPU_Name,WMU,KillYear,KILL_CODE,HuntMort,NonHuntMort)
+CIpointwWMU<-CIpoint %>%
+  st_join(GB_WMU, join = st_intersects) %>%
+  mutate(WMUid=as.numeric(GBPU_MU_LEH_uniqueID)) %>%
+  mutate(LEH=as.character(LEH_Zone2_fix)) %>%
+  dplyr::select(WMUid,MU,LEH,KillYear,KILL_CODE,HuntMort,NonHuntMort)
 
-# instead of overlay could use WMU and assign to GBPU
+# instead of overlay could use WMU and assign to GBPU?
 # Summarise non-hunt kill data for female + unknown, 10 years from 2008 to 2017
-FemaleUnk_Report<-CIpointwGBPU %>%
-  group_by(GBPU, GBPU_Name) %>%
+FemaleUnk_Report<-CIpointwWMU %>%
+  group_by(WMUid, MU, LEH) %>%
   dplyr::summarise(THuntMort=sum(HuntMort),TNonHuntMort=sum(NonHuntMort)) %>%
   mutate(FemaleUnk_HuntMort_10yrAvg = THuntMort/10) %>%
   mutate(FemaleUnk_NHuntMort_10yrAvg = TNonHuntMort/10) %>%
-  dplyr::select(GBPU_Name, GBPU, THuntMort, FemaleUnk_HuntMort_10yrAvg, TNonHuntMort,FemaleUnk_NHuntMort_10yrAvg)
+  dplyr::select(WMUid, MU, LEH, THuntMort, FemaleUnk_HuntMort_10yrAvg, TNonHuntMort,FemaleUnk_NHuntMort_10yrAvg)
 
 # Remove geometry so a simple data.frame
 st_geometry(FemaleUnk_Report) <- NULL
 
-#Join GBPU, population estimate - from file, reported female+unknown mortality
+#Join WMU, population estimate - from file, reported female+unknown mortality
+#set NAs to 0
+#set where MAX_ALLOW_MORT_PERC to minimum of 4%
 FemaleUnk_Report_pop<-FemaleUnk_Report %>%
-  merge(gb2018GBPUpop, by.x='GBPU_Name', by.y='POPULATION_NAME', all.y=TRUE) %>%
-  merge(UnReport,by.x='GBPU_Name',by.y='GBPU') %>%
-  dplyr::select(GBPU_Name, EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio)
-
-FemaleUnk_Report_pop[is.na(FemaleUnk_Report_pop)] <- 0
-
-
-
-
-
+  merge(gb2018WMUpop, by.x='WMUid', by.y='GBPU_MU_LEH_uniqueID', all.y=TRUE) %>%
+  merge(UnReport,by='WMUid') %>%
+  mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
+  mutate(Manage_target = case_when(MAX_ALLOW_MORT_PERC == 0 ~ 4, TRUE ~ MAX_ALLOW_MORT_PERC)) %>%
+  #mutate(test = ifelse(MAX_ALLOW_MORT_PERC == 0, 4, MAX_ALLOW_MORT_PERC)) %>%
+  dplyr::select(WMUid, MU = MU.y, AREA_KM2_noWaterIce, LEH, GRIZZLY_BEAR_POP_UNIT_ID, POPULATION_NAME, EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio,Manage_target)
 
