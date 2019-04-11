@@ -13,11 +13,7 @@
 source("header.R")
 
 # Spreadsheet of Mortality data by GBPU
-WriteXLS(FemaleUnk_Report_pop, file.path(dataOutDir,paste('FemaleUnk_Report_pop_MU.xls',sep='')))
-
-# Mortality raster for IUCN assessment
-#MortR<-subs(GBPUr,Mort_UnRep, by='GBPUid',which='pc_Mort')
-#writeRaster(MortR, filename=file.path(spatialOutDir,"MortR.tif"), format="GTiff", overwrite=TRUE)
+WriteXLS(GB_Summary, file.path(dataOutDir,paste('MortalityThreat_GBPU.xls',sep='')))
 
 #Make a pretty table for GBPU
 library(htmltools)
@@ -38,20 +34,20 @@ export_formattable <- function(f, file, width = "100%", height = NULL,
 }
 #(source: https://github.com/renkun-ken/formattable/issues/26)
 
-df1<-FemaleUnk_Report_pop[1:28,] %>%
+df1<-GB_Summary[1:28,] %>%
   dplyr::select(GBPU_Name,EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,
-                TotalFemale_HuntMort, TotalFemale_Mort,pc_Mort)
+                TotalFemale_HuntMort, TotalFemale_Mort,pc_Female_Mort, Mort_Bio_Threat)
 colnames(df1)<-c('GBPU','Pop 2018','10yr Avg Reported Female Non-Hunt Mortality','Unreported Non-Hunt Mortality Ratio',
                  'Unreported Non-Hunt Female Mortality','Total Non-Hunt Female Mortality',
-                 '10yr Avg Total Hunt Female Mortality','Total Female Mortality','per cent Mortality')
+                 '10yr Avg Total Hunt Female Mortality','Total Female Mortality','per cent Mortality', 'Threat')
 df1$GBPU <- factor(df1$GBPU)
 
-df2<-FemaleUnk_Report_pop[29:55,] %>%
+df2<-GB_Summary[29:55,] %>%
   dplyr::select(GBPU_Name,EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,
-                TotalFemale_HuntMort, TotalFemale_Mort,pc_Mort)
+                TotalFemale_HuntMort, TotalFemale_Mort,pc_Female_Mort, Mort_Bio_Threat)
 colnames(df2)<-c('GBPU','Pop 2018','10yr Avg Reported Female Non-Hunt Mortality','Unreported Non-Hunt Mortality Ratio',
                  'Unreported Non-Hunt Female Mortality','Total Non-Hunt Female Mortality',
-                 '10yr Avg Total Hunt Female Mortality','Total Female Mortality','per cent Mortality')
+                 '10yr Avg Total Hunt Female Mortality','Total Female Mortality','per cent Mortality', 'Threat')
 df2$GBPU <- factor(df2$GBPU)
 
 df.list<-list(df1,df2)
@@ -72,7 +68,10 @@ for (j in 1:npages) {
   formattable::area(col = c('Total Female Mortality')) ~ normalize_bar("lightgrey", 0.01),
   'per cent Mortality' = formatter("span", style = x ~
    ifelse(x < 1.33 ,style(color = "green", font.weight = "bold"), style(color = "red",
-   font.weight = "bold")))
+   font.weight = "bold"))),
+   'Threat' = formatter("span", style = x ~
+    ifelse(x < 1 ,style(color = "green", font.weight = "bold"), style(color = "red",
+    font.weight = "bold")))
 ))
 
 #webshot::install_phantomjs()
