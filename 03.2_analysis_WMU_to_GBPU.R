@@ -29,19 +29,29 @@ WMU_GB_Summary <- FemaleUnk_Report_pop_WMU %>%
                                FemaleUnk_HuntMort_10yrAvg=sum(FemaleUnk_HuntMort_10yrAvg),
                                TotalFemale_HuntMort=sum(TotalFemale_HuntMort),
                                FemaleUnk_NHuntMort_10yrAvg=sum(FemaleUnk_NHuntMort_10yrAvg),
-                               ) %>%
+                               UnReportedFemaleMort_WMU=sum(UnReportedFemaleMort),
+                               #Carry over Total Females mort calculated and re-calculate % of populations
+                               #This reflects the difference between the GBPU and WMU approach
+                               TotalFemale_Mort_WMU=sum(TotalFemale_Mort)
+              ) %>%
               merge(UnReport_GBPU, by.x='GBPU_Name', by.y='GBPU') %>%
 
               mutate(UnReportedFemaleMort = round((FemaleUnk_NHuntMort_10yrAvg*UnReportRatio),2)) %>%
               mutate(TotalFemale_NHuntMort = round((UnReportedFemaleMort + FemaleUnk_NHuntMort_10yrAvg),2)) %>%
+              mutate(TotalFemale_NHuntMort_WMU = round((UnReportedFemaleMort_WMU + FemaleUnk_NHuntMort_10yrAvg),2)) %>%
               mutate(TotalFemale_Mort = round((TotalFemale_HuntMort + TotalFemale_NHuntMort),2)) %>%
               mutate(pc_Female_Mort = round(TotalFemale_Mort/EST_POP_2018*100,2)) %>%
+              mutate(pc_Female_Mort_WMU = round(TotalFemale_Mort_WMU/EST_POP_2018*100,2)) %>%
 
               mutate(pcNeg=round(Neg/AREA_KM2_noWaterIce*100,2)) %>%
               mutate(pcLow=round(Low/AREA_KM2_noWaterIce*100,2)) %>%
               mutate(pcMed=round(Med/AREA_KM2_noWaterIce*100,2)) %>%
               mutate(pcHigh=round(High/AREA_KM2_noWaterIce*100,2)) %>%
-              mutate(Mort_Bio_Threat = case_when(pcNeg > 50 ~ '0',
+              mutate(Mort_Bio_Threat = case_when(pc_Female_Mort_WMU < 1.33  ~ 0,
+                            pc_Female_Mort_WMU >= 1.33 & pc_Female_Mort_WMU < 2 ~ 1,
+                            pc_Female_Mort_WMU >= 2 & pc_Female_Mort_WMU < 3.33 ~ 2,
+                            pc_Female_Mort_WMU >= 3.33 ~ 3 )) %>%
+              mutate(Mort_Bio_Threat_wt = case_when(pcNeg > 50 ~ '0',
                             pcLow > 50 ~ '1',
                             pcHigh > 50 ~ '3',
                             pcMed > 50 ~ '2',
@@ -53,8 +63,11 @@ WMU_GB_Summary <- FemaleUnk_Report_pop_WMU %>%
 #Data check
 Check<-WMU_GB_Summary %>%
   merge(GB_Summary, by='GBPU') %>%
-  dplyr::select(GBPU_Name=GBPU_Name.x, pc_Female_Mort=pc_Female_Mort.x, pcNeg, pcLow, pcMed,pcHigh,
-                Mort_Bio_Threat_WMU=Mort_Bio_Threat.x,Mort_Bio_Threat_GBPU=Mort_Bio_Threat.y)
+  dplyr::select(GBPU_Name=GBPU_Name.x, TotalFemale_Mort_WMU=TotalFemale_Mort_WMU, TotalFemale_Mort_GBPU=TotalFemale_Mort.y,
+                pc_Female_Mor_WMU=pc_Female_Mort_WMU, pc_Female_Mor_GBPU=pc_Female_Mort.y,
+                Mort_Bio_Threat_WMU=Mort_Bio_Threat.x,Mort_Bio_Threat_GBPU=Mort_Bio_Threat.y,
+                pcNeg, pcLow, pcMed,pcHigh)
+
 
 
 

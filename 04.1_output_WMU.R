@@ -33,6 +33,7 @@ export_formattable <- function(f, file, width = "100%", height = NULL,
           delay = delay)
 }
 #(source: https://github.com/renkun-ken/formattable/issues/26)
+FemaleUnk_Report_pop_WMU<-FemaleUnk_Report_pop_WMU[order(FemaleUnk_Report_pop_WMU$POPULATION_NAME),]
 
 df1<-FemaleUnk_Report_pop_WMU[1:240,] %>%
   dplyr::select(POPULATION_NAME, MU, LEH, EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,

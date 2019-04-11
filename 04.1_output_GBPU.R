@@ -33,6 +33,7 @@ export_formattable <- function(f, file, width = "100%", height = NULL,
           delay = delay)
 }
 #(source: https://github.com/renkun-ken/formattable/issues/26)
+GB_Summary<-GB_Summary[order(GB_Summary$GBPU_Name),]
 
 df1<-GB_Summary[1:28,] %>%
   dplyr::select(GBPU_Name,EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,
