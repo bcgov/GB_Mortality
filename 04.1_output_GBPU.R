@@ -36,7 +36,7 @@ export_formattable <- function(f, file, width = "100%", height = NULL,
 GB_Summary<-GB_Summary[order(GB_Summary$GBPU_Name),]
 
 df1<-GB_Summary[1:28,] %>%
-  dplyr::select(GBPU_Name,EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,
+  dplyr::select(GBPU_Name,EST_POP_2018, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,
                 TotalFemale_HuntMort, TotalFemale_Mort,pc_Female_Mort, Mort_Bio_Threat)
 colnames(df1)<-c('GBPU','Pop 2018','10yr Avg Reported Female Non-Hunt Mortality','Unreported Non-Hunt Mortality Ratio',
                  'Unreported Non-Hunt Female Mortality','Total Non-Hunt Female Mortality',
@@ -44,7 +44,7 @@ colnames(df1)<-c('GBPU','Pop 2018','10yr Avg Reported Female Non-Hunt Mortality'
 df1$GBPU <- factor(df1$GBPU)
 
 df2<-GB_Summary[29:55,] %>%
-  dplyr::select(GBPU_Name,EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,
+  dplyr::select(GBPU_Name,EST_POP_2018, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,
                 TotalFemale_HuntMort, TotalFemale_Mort,pc_Female_Mort, Mort_Bio_Threat)
 colnames(df2)<-c('GBPU','Pop 2018','10yr Avg Reported Female Non-Hunt Mortality','Unreported Non-Hunt Mortality Ratio',
                  'Unreported Non-Hunt Female Mortality','Total Non-Hunt Female Mortality',

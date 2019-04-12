@@ -36,12 +36,13 @@ export_formattable <- function(f, file, width = "100%", height = NULL,
 FemaleUnk_Report_pop_WMU<-FemaleUnk_Report_pop_WMU[order(FemaleUnk_Report_pop_WMU$POPULATION_NAME),]
 
 df1<-FemaleUnk_Report_pop_WMU[1:240,] %>%
-  dplyr::select(POPULATION_NAME, MU, LEH, EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,TotalFemale_NHuntMort,
-                TotalFemale_HuntMort, TotalFemale_Mort,pc_Female_Mort)
-colnames(df1)<-c('GBPU','MU','LEH','Pop 2018','10yr Avg Reported Female Non-Hunt Mortality','Unreported Non-Hunt Mortality Ratio',
+  dplyr::select(WMUid, POPULATION_NAME, MU, LEH, EST_POP_2018, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio, UnReportedFemaleMort,
+                TotalFemale_NHuntMort, TotalFemale_HuntMort, TotalFemale_Mort, pc_Female_Mort)
+
+colnames(df1)<-c('WMUid','GBPU','MU','LEH','Pop 2018','10yr Avg Reported Female Non-Hunt Mortality','Unreported Non-Hunt Mortality Ratio',
                  'Unreported Non-Hunt Female Mortality','Total Non-Hunt Female Mortality',
                  '10yr Avg Total Hunt Female Mortality','Total Female Mortality','per cent Female Mortality')
-df1$GBPU <- factor(df1$GBPU)
+df1$WMUid <- factor(df1$WMUid)
 
 #df.list<-list(df1,df2)
 df.list<-list(df1)
