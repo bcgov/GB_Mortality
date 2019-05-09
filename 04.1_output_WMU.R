@@ -13,6 +13,8 @@
 source("header.R")
 
 # Spreadsheet of Mortality data by WMU
+FemaleUnk_Report_pop_WMU<- readRDS(file = 'tmp/FemaleUnk_Report_pop_WMU')
+
 WriteXLS(FemaleUnk_Report_pop_WMU, file.path(dataOutDir,paste('MortalityThreat_WMU.xls',sep='')))
 
 #Make a pretty table for GBPU
@@ -68,5 +70,5 @@ for (j in 1:npages) {
 
 #webshot::install_phantomjs()
 DT.list[[j]]<-DT
-export_formattable(DT,file.path(figsOutDir,paste("WMU_GBMortalityTablewDensity_",j,".png",sep='')))
+export_formattable(DT,file.path(figsOutDir,paste("WMU_GBMortalityTablewDensity.png",sep='')))
 }

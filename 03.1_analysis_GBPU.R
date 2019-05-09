@@ -25,4 +25,7 @@ GB_Summary<-FemaleUnk_Report_pop_GBPU %>%
                                      pc_Female_Mort >= 2 & pc_Female_Mort < 3.33 ~ 2,
                                      pc_Female_Mort >= 3.33 ~ 3 ))
 
+saveRDS(GB_Summary, file = 'tmp/GB_Summary')
+#GB_Summary <- readRDS(file = 'tmp/GB_Summary')
+
 

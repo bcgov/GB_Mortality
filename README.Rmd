@@ -26,12 +26,18 @@ Population and mortality data requires permission from FLNRORD Fish and Wildlife
 
 ### Usage
 
-There are four core scripts that are required for the analysis, they need to be run in order:
+There are 10 scripts that are avaialble for the analysis, they need to be run in order:
 
 - 01_load.R
-- 02_clean.R
-- 03_analysis.R
-- 04_output.R
+- 02_clean_CI.R - aggregrates cumpulsory inspection data into a single shape file
+- 02_clean_GBPU.R - summarizes CI data by GBPU
+- 02_clean_WMU.R - summarizes CI data by WMU
+- 03_analysis_GBPU.R - calculates female mortality by GBPU
+- 03_analysis_WMU.R - calculates female mortality by WMU
+- 03_analysis_WMU_to_GBPU.R - calculates female mortality by WMU then summarizes to GBPU
+- 04_output_GBPU.R - generates GBPU summary table
+- 04_output_WMU.R - generates WMU summary table
+- 04_output_WMU_to_GBPU.R - generates GBPU summary table
 
 ### Getting Help or Reporting an Issue
 

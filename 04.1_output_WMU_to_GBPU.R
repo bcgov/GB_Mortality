@@ -13,6 +13,9 @@
 source("header.R")
 
 # Spreadsheet of Mortality data by GBPU
+# One used for IUCN analysis - see report
+WMU_GB_Summary<- readRDS(file = 'tmp/WMU_GB_Summary')
+
 WriteXLS(WMU_GB_Summary, file.path(dataOutDir,paste('MortalityThreat_WMU_to_GBPU.xls',sep='')))
 
 #Make a pretty table for GBPU

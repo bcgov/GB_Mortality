@@ -27,3 +27,9 @@ FemaleUnk_Report_pop_WMU<-FemaleUnk_Report_pop_WMU %>%
                                      pc_Female_Mort >= 3.33 ~ 3 ))
 
 
+saveRDS(FemaleUnk_Report_pop_WMU, file = 'tmp/FemaleUnk_Report_pop_WMU')
+#FemaleUnk_Report_pop_WMU<- readRDS(file = 'tmp/FemaleUnk_Report_pop_WMU')
+
+
+
+

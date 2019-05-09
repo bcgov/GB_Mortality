@@ -13,6 +13,7 @@
 source("header.R")
 
 # Spreadsheet of Mortality data by GBPU
+GB_Summary <- readRDS(file = 'tmp/GB_Summary')
 WriteXLS(GB_Summary, file.path(dataOutDir,paste('MortalityThreat_GBPU.xls',sep='')))
 
 #Make a pretty table for GBPU

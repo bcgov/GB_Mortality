@@ -17,7 +17,7 @@ source("header.R")
 CIpoint1 <- GB_CI %>%
   filter(KillYear <2018 & KillYear>2007 & SEX != 'M') %>%
   mutate(HuntMort=as.numeric(KILL_CODE == 1)) %>%
-  mutate(NonHuntMort=as.numeric(KILL_CODE != 1))
+  mutate(NonHuntMort=as.numeric(KILL_CODE != 1 & KILL_CODE != 3))
   #filter(KILL_CODE != 1 & KillYear <2018 & KillYear>2007 & SEX != 'M')
 
 #Covers 4 UTM zones - make an sf for each zone then project to Albers and combine them

@@ -42,3 +42,10 @@ FemaleUnk_Report_pop_WMU<-FemaleUnk_Report_WMU %>%
   mutate(Manage_target = case_when(MAX_ALLOW_MORT_PERC == 0 ~ 4, TRUE ~ MAX_ALLOW_MORT_PERC)) %>%
   #mutate(test = ifelse(MAX_ALLOW_MORT_PERC == 0, 4, MAX_ALLOW_MORT_PERC)) %>%
   dplyr::select(WMUid, MU = MU.y, AREA_KM2_noWaterIce, LEH=LEH.y, GRIZZLY_BEAR_POP_UNIT_ID, POPULATION_NAME, EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio,Manage_target)
+
+
+
+
+
+
+

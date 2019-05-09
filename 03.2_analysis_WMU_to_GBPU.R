@@ -60,6 +60,10 @@ WMU_GB_Summary <- FemaleUnk_Report_pop_WMU %>%
                             (pcLow + pcHigh) > 50 & pcMed == 0 ~ '2'
                             ))
 
+saveRDS(WMU_GB_Summary, file = 'tmp/WMU_GB_Summary')
+#WMU_GB_Summary<- readRDS(file = 'tmp/WMU_GB_Summary')
+
+
 #Data check
 Check<-WMU_GB_Summary %>%
   merge(GB_Summary, by='GBPU') %>%
