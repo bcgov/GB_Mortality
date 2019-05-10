@@ -18,7 +18,7 @@ library(RCurl)
 FTPtarget <-'ftp.for.gov.bc.ca/HRE/gov_internal/incoming/Morgan/'
 FileDir<-'GB_Mortality'
 FileToUpload<-c(file.path(dataOutDir,'MortalityThreat_WMU_to_GBPU.xls'),
-                #file.path(dataOutDir,'FemaleUnk_Report_pop.xls'),
+                file.path(dataOutDir,'MortalityThreat_WMU.xls'),
                 file.path(figsOutDir,'GB_to_WMU_MortalityTablewDensity_1.png'),
                 file.path(figsOutDir,'GB_to_WMU_MortalityTablewDensity_2.png'))
 
