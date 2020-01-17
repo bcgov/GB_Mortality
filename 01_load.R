@@ -43,9 +43,6 @@ for (i in 1:num) {
 #select the full GBPU - 'GBPUr'
 UnReport_GBPU<-UnrepLR[[1]]
 
-#Load 2018 grizzly bear population data
-gb2018GBPUpop <- data.frame(read_xls(file.path(GBDataOutDir, "gb2018GBPUpop.xls"), sheet=NULL))
-
 #Read in spatial files used
 GBPUr<-raster(file.path(StrataDir,"GBPUr.tif"))
 GBPU<-st_read(file.path(GBspatialDir,'GBPU.shp'))
@@ -73,8 +70,11 @@ for (i in 1:num) {
 #select the full GBPU for now - 'GBPUr'
 UnReport_WMU<-UnrepLR[[1]]
 
-#Load 2018 grizzly bear population data
-gb2018WMUpop <- data.frame(read_xls(file.path(GBDataOutDir, "gb2018WMUpop.xls"), sheet=NULL))
+#Load 2018 grizzly bear population data from the GB_data prep
+#from the 2018 gdb
+gb2018WMUpop <- data.frame(read_xls(file.path(GBDataOutDir, "WMUpop.xls"), sheet=NULL))
+gb2018GBPUpop <- data.frame(read_xls(file.path(GBDataOutDir, "GBPUpop.xls"), sheet=NULL))
+
 
 #Read in spatial files used
 WMUr<-raster(file.path(StrataDir,"WMUr.tif"))
