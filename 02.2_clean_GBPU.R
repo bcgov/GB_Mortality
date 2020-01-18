@@ -18,7 +18,7 @@ GBPU<-st_transform(GBPU,crs="+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-1
 CIpointwGBPU<-CIpoint %>%
   st_join(GBPU, join = st_intersects) %>%
   mutate(GBPU=as.numeric(GBPU)) %>%
-  mutate(GBPU_Name=as.character(POPUL)) %>%
+  mutate(GBPU_Name=as.character(POPULAT)) %>%
   dplyr::select(GBPU,GBPU_Name,KillYear,KILL_CODE,HuntMort,NonHuntMort)
 
 # Summarise non-hunt kill data for female + unknown, 10 years from 2008 to 2017
@@ -39,5 +39,5 @@ FemaleUnk_Report_pop_GBPU<-FemaleUnk_Report_GBPU %>%
   mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
   #mutate(Manage_target = case_when(MAX_ALLOW_MORT_PERC == 0 ~ 4, TRUE ~ MAX_ALLOW_MORT_PERC)) %>%
   #mutate(test = ifelse(MAX_ALLOW_MORT_PERC == 0, 4, MAX_ALLOW_MORT_PERC)) %>%
-  dplyr::select(GBPU, GBPU_Name=POPULATION_NAME, AREA_KM2_noWaterIce, EST_POP_2018, FemaleUnk_HuntMort_10yrAvg, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio)
+  dplyr::select(GBPU, GBPU_Name=POPULATION_NAME, Area_km2_noWaterIce, EST_POP_2018=pop2018, FemaleUnk_HuntMort_10yrAvg, FemaleUnk_NHuntMort_10yrAvg, UnReportRatio)
 
